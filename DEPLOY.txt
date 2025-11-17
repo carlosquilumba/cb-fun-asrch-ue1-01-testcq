@@ -1,0 +1,126 @@
+Pasos para Desplegar Azure Function: cb-fun-asrch-ue1-01-testcq
+
+Paso 1: Verificar Prerrequisitos
+
+1. Azure CLI instalado:
+   az --version
+
+2. Azure Functions Core Tools instalado:
+   func --version
+
+   Si no lo tienes, instala con:
+   npm install -g azure-functions-core-tools@4
+
+3. Python 3.12 instalado:
+   python --version
+
+Paso 2: Iniciar Sesion en Azure
+
+1. Abre PowerShell o Terminal
+2. Ejecuta:
+   az login
+
+3. Selecciona tu suscripcion si tienes varias:
+   az account set --subscription "Suscripcion-Sandbox-CQuilumba"
+
+Paso 3: Navegar a la Carpeta del Proyecto
+
+1. Abre PowerShell o Terminal
+2. Navega a la carpeta:
+   cd C:\bit\talleres\application_gateway\cb-fun-asrch-ue1-01-testcq
+
+Paso 4: Verificar Archivos
+
+Asegurate de tener estos archivos en la carpeta:
+- host.json
+- requirements.txt
+- Saludo/function.json
+- Saludo/__init__.py
+
+Paso 5: Instalar Dependencias Localmente (Opcional para Testing)
+
+pip install -r requirements.txt
+
+Paso 6: Probar Localmente (Opcional)
+
+func start
+
+La funcion estara disponible en:
+http://localhost:7071/api/Saludo?nombre=Juan
+
+Presiona Ctrl+C para detener.
+
+Paso 7: Desplegar a Azure
+
+Ejecuta el comando de despliegue:
+
+func azure functionapp publish cb-fun-asrch-ue1-01-testcq
+
+Este comando:
+- Empaqueta todos los archivos
+- Sube el codigo a Azure
+- Instala las dependencias de requirements.txt
+- Configura la Function App
+
+Paso 8: Verificar el Despliegue
+
+1. Ve al portal de Azure
+2. Busca "Function App" y selecciona cb-fun-asrch-ue1-01-testcq
+3. Ve a "Functions" en el menu izquierdo
+4. Deberias ver la funcion "Saludo" listada
+
+Paso 9: Probar la Funcion Desplegada
+
+URL de la funcion:
+https://cb-fun-asrch-ue1-01-testcq.azurewebsites.net/api/Saludo?nombre=Juan
+
+O desde PowerShell:
+Invoke-WebRequest -Uri "https://cb-fun-asrch-ue1-01-testcq.azurewebsites.net/api/Saludo?nombre=Juan"
+
+Solucion de Problemas Comunes:
+
+Error: Another deployment is in progress (IMPORTANTE)
+
+Este error indica que hay un despliegue en curso en Azure y no puedes iniciar uno nuevo hasta que termine.
+
+Solucion 1 - Esperar (Recomendado):
+1. Ve al Portal de Azure
+2. Busca "Function App" y selecciona cb-fun-asrch-ue1-01-testcq
+3. Ve a "Deployment Center" en el menu izquierdo
+4. Espera a que el despliegue actual termine (puede tardar 2-5 minutos)
+5. Una vez terminado, vuelve a ejecutar:
+   func azure functionapp publish cb-fun-asrch-ue1-01-testcq
+
+Solucion 2 - Verificar estado:
+Ejecuta este comando para ver el estado del despliegue:
+az functionapp deployment list --name cb-fun-asrch-ue1-01-testcq --resource-group cb-rg-asrch-ue1-01-testcq
+
+Solucion 3 - Esperar y reintentar:
+Espera 5 minutos y vuelve a ejecutar el comando de despliegue.
+
+Error: Function App no encontrada
+- Verifica que la Function App exista en Azure
+- Verifica que estes en la suscripcion correcta
+- Verifica el nombre exacto: cb-fun-asrch-ue1-01-testcq
+
+Error: No se pueden instalar dependencias
+- Verifica que requirements.txt tenga solo:
+  azure-functions
+  azure-functions-worker
+
+Error: Timeout al desplegar
+- Espera unos minutos y vuelve a intentar
+- Verifica tu conexion a internet
+
+Error: No se encuentra la funcion
+- Verifica que la carpeta Saludo/ tenga function.json y __init__.py
+- Verifica que function.json tenga el formato correcto
+- Espera 2-3 minutos despues del despliegue para que Azure procese las funciones
+
+Notas Importantes:
+
+- El nombre de la Function App en Azure debe ser exactamente: cb-fun-asrch-ue1-01-testcq
+- Asegurate de estar en la carpeta correcta antes de ejecutar func azure functionapp publish
+- El primer despliegue puede tardar varios minutos
+- Despues del despliegue, la funcion estara disponible en la URL publica
+

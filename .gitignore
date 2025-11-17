@@ -1,0 +1,17 @@
+# Azure Functions
+.python_packages/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+local.settings.json
+.azure/
+.vscode/
+.idea/
+
+# Logs
+*.log
